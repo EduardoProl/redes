@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic initial configuration cheat-sheet</title>
+</head>
+<body>
+    <h1>A recommended basic initial device configuration</h1>
+
+<p>You might find convenient to execute the following sequence of commands before doing any other configuration or troubleshooting tasks on your Cisco device, in order to improve your workflow on the terminal.</p>
+
+<p>You will find a command-and-explanation table right below, and a text box with the same command sequence <strong>you can copy and paste on your device's terminal</strong> after that.</p>
+
+<p>Note: These commands work on both Cisco routers and switches.</p>
+
+<table>
+    <thead>
+        <tr>
+            <th style="border: 1px solid black;">Command</th>
+            <th style="border: 1px solid black;">Additional Notes</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;"><code>CDevice&gt;enable</code></td>
+            <td style="border: 1px solid black;"></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>CDevice#configure terminal</code></td>
+            <td style="border: 1px solid black;"></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>CDevice(config)#no ip domain-lookup</code></td>
+            <td style="border: 1px solid black;">disable DNS lookup</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>CDevice(config)#cdp run</code></td>
+            <td style="border: 1px solid black;">ensure CDP is running <span style="font-size: 80%;">(although it is running on Cisco devices by default)</span></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>CDevice(config)#line console 0</code></td>
+            <td style="border: 1px solid black;"></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>CDevice(config-line)#logging synchronous</code></td>
+            <td style="border: 1px solid black;"></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>CDevice(config-line)#history size [lines]</code></td>
+            <td style="border: 1px solid black;">specify the size (number of lines) for the history of executed commands (you can view your history with <code>R1#show history</code>)</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>CDevice(config-line)#exec-timeout [minutes] [seconds]</code></td>
+            <td style="border: 1px solid black;"></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>CDevice(config-line)#end</code></td>
+            <td style="border: 1px solid black;">exit to EXEC privileged mode, where the next command will be executed</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>CDevice#copy running-config startup-config</code></td>
+            <td style="border: 1px solid black;">Saves the running configuration to the NVRAM</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>You can copy the same sequence, contained in the text box below, and paste it in your Cisco device, whether it is a real-world physical Cisco device, or a simulated device in an environment like Packet Tracer.</p>
+
+<p> Note that the commands below are abbreviated. Still. They should work just fine.<br>
+ Be sure to select and copy up to the blank line below the last command. That way, such last command will be executed without you having to manually press enter.</p>
+
+<pre>
+ena
+conf t
+no ip domain-lookup
+cdp run
+line con 0
+logging syn
+his size 50
+exec-timeout 25 0
+end
+copy run start
+
+<< select and copy up to the line above this "marker" with your cursor
+</pre>
+
+<h2>Other tips and hints for your initial configurations</h2>
+
+<p> If there are non-Cisco devices on your network, you might also want to enable LLDP (Link-Layer Discovery Protocol), use:<br>
+<code>CDevice(config)#lldp run</code></p>
+
+</body>
+</html>

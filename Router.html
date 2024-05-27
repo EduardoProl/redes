@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCNA Router command cheat-sheet</title>
+</head>
+<body>
+    <h1>CCNA Router command cheat-sheet</h1>
+    <h3>Useful router commands for CCNA2 v6 (Routing and Switching Essentials) Cisco Networking Academy course.</h3>
+
+    <hr>
+
+    <h2 id="table-of-contents">Table of contents</h2>
+    <ul>
+        <li><a href="#important-show-commands">Important <code>show</code> commands</a></li>
+        <li><a href="#filtering-information-from-show">Output filtering</a></li>
+        <li><a href="#static-routing">Static routing</a></li>
+        <li><a href="#dynamic-routing-rip">Dynamic routing: RIP</a></li>
+        <li><a href="#dynamic-routing-ospf">Dynamic routing: OSPF</a></li>
+        <li><a href="#configuring-Router-on-a-stick-inter-VLAN-routing">Routing between VLANS: ROAS</a></li>
+        <li><a href="#no_pedestrians-access-control-lists-acl">Access Control Lists (ACL)</a></li>
+        <li><a href="#dhcpv4">DHCPv4</a></li>
+        <li><a href="#dhcpv6">DHCPv6</a></li>
+        <li><a href="#nat">NAT</a></li>
+        <li><a href="#hsrp">HSRP</a></li>
+    </ul>
+
+    <h2>Before we start: Configuration modes</h2>
+    <p>Three basic configuration modes we MUST be familiar with already (you will see them below, a lot).</p>
+
+    <table>
+        <thead>
+            <tr>
+                <td style="border: 1px solid black;"    >Mode (prompt)</td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >Mode</td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >Mode change (current -> next)</td style="border: 1px solid black;"    >
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="border: 1px solid black;"    ><code>R1&gt;</code></td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >user EXEC mode  AKA <em>view-only mode</em></td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >type <code>enable</code> to pass to next mode</td style="border: 1px solid black;"    >
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"    ><code>R1#</code></td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >Privileged EXEC mode</td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >type <code>configure terminal</code> to pass to next mode</td style="border: 1px solid black;"    >
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"    ><code>R1(config)#</code></td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >Global configuration mode</td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >N/A</td style="border: 1px solid black;"    >
+            </tr>
+        </tbody>
+    </table>
+
+    <p>Common abbreviations to the commands above (separated by commas):</p>
+    <pre>
+en, ena
+conf t, config term
+    </pre>
+
+    <p>On a Cisco router, from <strong>global configuration mode</strong>, you can also access the two following configuration modes:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <td style="border: 1px solid black;"    >Mode (prompt)</td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >Mode</td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >Description</td style="border: 1px solid black;"    >
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="border: 1px solid black;"    ><code>R1(config-if)#</code></td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >Interface configuration mode</td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >used to configure an individual interface</td style="border: 1px solid black;"    >
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"    ><code>R1(config-router)#</code></td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >Router configuration mode</td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >used when configuring an IPv4 routing protocol</td style="border: 1px solid black;"    >
+            </tr>
+        </tbody>
+    </table>
+
+    <blockquote>
+        <p> When configuring an IPv6 routing protocol, such as OSPFv3, the router configuration mode prompt will be: <code>R1(config-rtr)#</code></p>
+    </blockquote>
+
+    <hr>
+    <!-- Show -->
+    <h2 id="important-show-commands">Important <code>show</code> commands:</h2>
+    <p>Note that these commands are executed on privileged EXEC mode (<code>R1#</code> prompt).</p>
+    <p>You can execute them from global configuration mode (<code>R1(config)#</code> prompt) by adding the <code>do</code> keyword before the command.</p>
+    <p>example:</p>
+    <pre><code>R1(config)#do show ip interface brief
+    </code></pre>
+    <table>
+        <thead>
+            <tr>
+                <td style="border: 1px solid black;"    >Command</td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >Description</td style="border: 1px solid black;"    >
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="border: 1px solid black;"    ><code>R1#show running-config</code></td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >display config saved in RAM (and the currently running configuration in the device)</td style="border: 1px solid black;"    >
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"    ><code>R1#show startup-config</code></td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >display config saved in NVRAM</td style="border: 1px solid black;"    >
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"    ><code>R1#show history</code></td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    ></td style="border: 1px solid black;"    >
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 id="filtering-information-from-show">Filtering information from <code>show</code> commands:</h3>
+    <p>Some commands, such as <code>show running-config</code>, generate multiple lines of output.</p>
+    <p>To filter output, you can use the <em>pipe</em> (<code>|</code>) character along with a <strong>filtering parameter</strong> and a <strong>filtering expression</strong>.</p>
+    <table>
+        <thead>
+            <tr>
+                <td style="border: 1px solid black;"    >Filtering parameters</td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >Effect</td style="border: 1px solid black;"    >
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="border: 1px solid black;"    ><code>section [filtering-expression]</code></td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >shows the section of the <em>filtering expression</em></td style="border: 1px solid black;"    >
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"    ><code>include [filtering-expression]</code></td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >includes all lines of output that match the <em>filtering expression</em> <strong>ONLY</strong></td style="border: 1px solid black;"    >
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"    ><code>exclude [filtering-expression]</code></td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >excludes all lines of output that match the <em>filtering expression</em></td style="border: 1px solid black;"    >
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"    ><code>begin [filtering-expression]</code></td style="border: 1px solid black;"    >
+                <td style="border: 1px solid black;"    >shows all the lines of output <strong>beginning from</strong> the line that matches the <em>filtering expression</em></td style="border: 1px solid black;"    >
+            </tr>
+        </tbody>
+    </table>
+
+    <p><strong>Usage:</strong></p>
+    <p>Here's an example of the usage of filtering with a <code>show</code> command:</p>
+    <pre><code>R1#show running-config | include line con
+    </code></pre>
+    <p><strong>ProTip:</strong> By default, the screen of output consists of 24 lines. Should you want to change the number of output lines displayed on the terminal screen, you can use the command: <code>R1# terminal length [number-of-lines]</code><br><strong>Unfortunately, this command is NOT supported in Cisco Packet Tracer (tested on version 7.2.2).</strong></p>
+
+    <!-- Static routing -->
+    <hr>
+    <h2 id="static-routing">Static routing</h2>
+    <p>With an administrative distance (AD) of <code>1</code>. These are, just after the <strong>directly connected routes</strong>, the most trustworthy routes a router can have on its routing table.</p>
+    <p>Static routes are all configured in <strong>global configuration mode</strong>, with the <code>ip route</code> command, i.e.,</p>
+    <blockquote>
+        <code>R1(config)#ip route [network-address] [subnet-mask] ....</code>
+    </blockquote>
+
+    <h3>There are essentially four types of static routes, with particular purposes.</h3>
+
+    <h4>Standard Static Route</h4>
+    <blockquote>
+        <code>R1(config)#ip route [network-address] [subnet-mask] ([next-hop-ip] [exit-int])</code>
+    </blockquote>
+
+    <h4>Default Static Route</h4>
+    <blockquote>
+        <code>R1(config)#ip route 0.0.0.0 0.0.0.0 ([next-hop-ip] [exit-int])</code>
+    </blockquote>
+
+    <h4>Floating Static Route</h4>
+    <blockquote>
+        <code>R1(config)#ip route [network-address] [subnet-mask] ([next-hop-ip] [exit-int]) [AD]</code>
+    </blockquote>
+
+    <h4>Summary Static Route</h4>
+    <blockquote>
+        <code>R1(config)#ip route [network-address] [subnet-mask*] ([next-hop-ip] [exit-int])</code><br>
+        <code>*</code> Using the appropriate subnet mask that summarizes the otherwise separate routes into a <strong>single</strong>, static route.
+    </blockquote>
+
+    <hr>
+    <!-- Dynamic Routing-->
+    <h2 id="dynamic-routing-rip">Dynamic routing: RIP</h2>
+    <p>RIP = Routing Information Protocol</p>
+    <table>
+        <thead>
+            <tr>
+                <td style="border: 1px solid black;"   >Command</td style="border: 1px solid black;"   >
+                <td style="border: 1px solid black;"   >Description</td style="border: 1px solid black;"   >
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="border: 1px solid black;"   >R1(config)#ip routing</td style="border: 1px black;">
+                <td style="border: 1px solid black;"   >Ativa o routing de IP</td style="border: 1px black;">
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"   >R1(config)#router RIP</td style="border: 1px black;">
+                <td style="border: 1px solid black;"   >entra no modo configuracao de routing, no RIP</td style="border: 1px black;">
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"   >R1(config-router)#network A.B.C.D</td style="border: 1px black;">
+                <td style="border: 1px solid black;"   >Emite, para todos os routers com Ip routing ativo, que conhece a rede com o ip A.B.C.D </td style="border: 1px black;">
+            </tr>
+        </tbody>
+    </table>
+    <h2 id="dynamic-routing-ospf">Dynamic routing: OSPF</h2>
+
+    <h3>OSPF configuration</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <td style="border: 1px solid black;"   >Command</td style="border: 1px solid black;"   >
+                <td style="border: 1px solid black;"   >Description</td style="border: 1px solid black;"   >
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="border: 1px solid black;"   ><code>R1(config)#router ospf [PID]</code></td style="border: 1px solid black;"   >
+                <td style="border: 1px solid black;"   >create OSPF process with Process ID [PID] (1 - 65535)</td style="border: 1px solid black;"   >
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"   ><code>R1(config-router)#router-id [a.b.c.d]</code></td style="border: 1px solid black;"   >
+                <td style="border: 1px solid black;"   >manually assign the router an ID, in an IPv4 address format.</td style="border: 1px solid black;"   >
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"   ><code>R1(config-router)#network [network-address] [wildcard-mask] area [area id]</code></td style="border: 1px solid black;"   >
+                <td style="border: 1px solid black;"   >for all directly connected networks, announce each network following this nomenclature. Area ID can go from 0 to 4294967295</td style="border: 1px solid black;"   >
+            </tr>
+        </tbody>
+    </table>
+
+    <p> The <code>area id</code> can also be expressed in IP address format, hence the range of available <code>area id</code>s.</p>
+
+    <p> ProTip: How can I easily visualize all the directly connected networks a router has?<br>
+    Issue the <code>R1(config)#do show ip route con</code> command.<br>
+    It will display the routing table ONLY with the directly connected networks (routes).</p>
+
+    <blockquote>
+         <strong>Best practice:</strong> OSPF routers <strong>within an area</strong> use <strong>and need unique IDs</strong> to identify themselves. It is highly convenient to manually set a desired router ID with the <code>router-id</code> command.
+    </blockquote>
+
+    <h3>OSPF verification</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <td style="border: 1px solid black;"   >Command</td style="border: 1px solid black;"   >
+                <td style="border: 1px solid black;"   >Description</td style="border: 1px solid black;"   >
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="border: 1px solid black;"   ><code>R1#show ip protocols</code></td style="border: 1px solid black;"   >
+                <td style="border: 1px solid black;"   >your go-to command to quickly verify key OSPF configuration information on a router, including PID, router ID, advertised networks, neighbors and administrative distance.</td style="border: 1px solid black;"   >
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"   ><code>R1#show ip route</code></td style="border: 1px solid black;"   >
+                <td style="border: 1px solid black;"   >adfa. Additionally, issue <code>shw ip route ospf</code> to see only the OSPF-learned networks (entries) on the routing table.</td style="border: 1px solid black;"   >
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"   ><code>R1#show ip ospf neighbor</code></td style="border: 1px solid black;"   >
+                <td style="border: 1px solid black;"   >list of this router's OSPF <em>neighbor</em> routers</td style="border: 1px solid black;"   >
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"   ><code>R1#show ip ospf</code></td style="border: 1px solid black;"   >
+                <td style="border: 1px solid black;"   >useful to identify the PID, router ID, area information, and when the SPF algorithm was run for the last time</td style="border: 1px solid black;"   >
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"   ><code>R1#show ip ospf interface brief</code></td style="border: 1px solid black;"   >
+                <td style="border: 1px solid black;"   >summary of router's OSPF-enabled interfaces. <strong>WARNING:</strong> This command does NOT seem to work on Packet Tracer 7.3</td style="border: 1px solid black;"   >
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"   ><code>R1#show ip ospf interface</code></td style="border: 1px solid black;"   >
+                <td style="border: 1px solid black;"   >in-detail list of every OSPF-enabled interface</td style="border: 1px solid black;"   >
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;"   ><code>R1#show ip ospf interface [int-id]</code></td style="border: 1px solid black;"   >
+                <td style="border: 1px solid black;"   >in-detail information for a particular OSPF-enabled interface</td style="border: 1px solid black;"   >
+            </tr>
+        </tbody>
+    </table>
+
+    <p> Recall: OSPF's default AD is <code>110</code><br>
+    You can find common AD values <a href="#appendix-common-administrative-distance-ad-values">here</a>.</p>
+
+    <!-- Configuring Router-on-a-stick inter-VLAN routing-->
+    <hr>
+    <h2 id="configuring-Router-on-a-stick-inter-VLAN-routing">Configuring Router-on-a-stick inter-VLAN routing</h2>
+
+<p>To enable router-on-a-stick inter-VLAN routing, we must configure multiple <strong>subinterfaces</strong> (as many as the number of VLANs over which we want to route traffic).<br>
+Through this process, only one physical interface, and thus, one trunk link, are required.</p>
+
+<p>In global configuration mode, i.e., <code>R1(config)#</code> prompt:</p>
+
+<table>
+    <thead>
+        <tr>
+            <td style="border: 1px solid black;"  >Command</td style="border: 1px solid black;"  >
+            <td style="border: 1px solid black;"  >Description</td style="border: 1px solid black;"  >
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;"  ><code>R1(config)#interface g0/0.[vlan-id]</code></td style="border: 1px solid black;"  >
+            <td style="border: 1px solid black;"  >create the <code>.[vlan-id]</code> <strong>subinterface</strong> on interface Gigabit Ethernet 0/0</td style="border: 1px solid black;"  >
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"  ><code>R1(config-subif)#encapsulation dot1q [vlan-id]</code></td style="border: 1px solid black;"  >
+            <td style="border: 1px solid black;"  >configure subinterface to operate on a specified VLAN</td style="border: 1px solid black;"  >
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"  ><code>R1(config-subif)#encapsulation dot1q [vlan-id] native</code></td style="border: 1px solid black;"  >
+            <td style="border: 1px solid black;"  >must be configured on the subinterface belonging to the <strong>native</strong> VLAN</td style="border: 1px solid black;"  >
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"  ><code>R1(config-subif)#ip address [ip-address] [subnet-mask]</code></td style="border: 1px solid black;"  >
+            <td style="border: 1px solid black;"  >:exclamation: don't forget to assign the subinterface an IP address!</td style="border: 1px solid black;"  >
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"  ><code>R1(config-subif)#interface g0/0</code></td style="border: 1px solid black;"  >
+            <td style="border: 1px solid black;"  >access the Gigabit0/0 interface (i.e., the actual physical interface) to enable it</td style="border: 1px solid black;"  >
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"  ><code>R1(config-if)#no shutdown</code></td style="border: 1px solid black;"  >
+            <td style="border: 1px solid black;"  >enable the physical interface. This enables <strong>all</strong> configured subinterfaces <strong>on that interface</strong></td style="border: 1px solid black;"  >
+        </tr>
+    </tbody>
+</table>
+<!--Access Control Lists-->
+<hr>
+
+<h2 id="no_pedestrians-access-control-lists-acl">Access Control Lists (ACL)</h2>
+
+<p> ProTip: <strong>Standard or extended?</strong> - Standard ACLs are generally -if not always- placed closest to the destination. Extended ACLs are placed closest to the source. Think you might have trouble remembering that? Try this:<br>
+    <blockquote><em>"Standard closest to Destination"</em>, i.e., <strong>S - D</strong><br>
+        <em>"Extended closest to Source"</em>, i.e., <strong>E - S</strong><br>
+        Notice (and remember) there is <strong>only one S</strong> on each the previous letter pairs.
+    </blockquote>
+</p>
+
+<p> Recall: <strong>How many ACLs can I have on the router?</strong> - One per interface, per protocol (IPv4, IPv6), per direction (inbound, outbound)</p>
+
+<h3>Procedure for configuring Standard Numbered ACLs</h3>
+
+<table>
+    <thead>
+        <tr>
+            <td style="border: 1px solid black;"  >Command</td style="border: 1px solid black;"  >
+            <td style="border: 1px solid black;"  >Description</td style="border: 1px solid black;"  >
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;"  ><code>R1(config)#access-list [number] [permit/deny] [address] [wildcard mask]</code></td style="border: 1px solid black;"  >
+            <td style="border: 1px solid black;"  >create entry in standard IPv4 ACL with specified number</td style="border: 1px solid black;"  >
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"  ><code>R1(config)#interface [int-id]</code></td style="border: 1px solid black;"  >
+            <td style="border: 1px solid black;"  >select the interface to which the ACL will be applied</td style="border: 1px solid black;"  >
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"  ><code>R1(config-if)#ip access-group [number] [in/out]</code></td style="border: 1px solid black;"  >
+            <td style="border: 1px solid black;"  >activate the ACL on the selected interface</td style="border: 1px solid black;"  >
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"  ><code>R1(config)#no access-list [number]</code></td style="border: 1px solid black;"  >
+            <td style="border: 1px solid black;"  ><strong>WARNING:</strong> This <strong>ERASES</strong> the ACL, i.e., <strong>EVERY ACE</strong> (Access Control entry) <strong>that makes it up</strong></td style="border: 1px solid black;"  >
+        </tr>
+    </tbody>
+</table>
+
+<blockquote>
+     <strong>WARNING:</strong> <strong>Best practice / IMPORTANT:</strong> It is HIGHLY recommended to always have EACH of your ACLs <strong>backed-up.</strong>
+</blockquote>
+
+<h3>Procedure for configuring Standard Named ACLs</h3>
+
+<table>
+    <thead>
+        <tr>
+            <td style="border: 1px solid black;"  >Command</td style="border: 1px solid black;"  >
+            <td style="border: 1px solid black;"  >Description</td style="border: 1px solid black;"  >
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;"  ><code>R1(config)#ip access-list [standard] [name]</code></td style="border: 1px solid black;"  >
+            <td style="border: 1px solid black;"  >creates a standard named ACL. Will take you to standard (<code>std</code>) named ACL (<code>nacl</code>) configuration mode after entering it</td style="border: 1px solid black;"  >
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"  ><code>R1(config-std-nacl)#</code></td style="border: 1px solid black;"  >
+            <td style="border: 1px solid black;"  ></td style="border: 1px solid black;"  >
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+<!--DHCPV4-->
+<h2 id="dhcpv4">DHCPv4</h2>
+
+<h3>Configure a Cisco router as a DHCPv4 server</h3>
+
+<table>
+    <thead>
+        <tr>
+            <td style="border: 1px solid black;" >Command</td style="border: 1px solid black;" >
+            <td style="border: 1px solid black;" >Description</td style="border: 1px solid black;" >
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;" ><code>R1(config)#ip dhcp excluded-address [start-address (end-address)]</code></td style="border: 1px solid black;" >
+            <td style="border: 1px solid black;" >exclude a single or a range of IPv4 addresses, i.e., these addresses will not be available for DHCP assignment to hosts</td style="border: 1px solid black;" >
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;" ><code>R1(config)#ip dhcp pool [pool name]</code></td style="border: 1px solid black;" >
+            <td style="border: 1px solid black;" >create and name the pool of available addresses to assign. Takes you to <strong>DHCP config mode</strong>.</td style="border: 1px solid black;" >
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;" ><code>R1(dhcp-config)#network [network-id] [mask]</code></td style="border: 1px solid black;" >
+            <td style="border: 1px solid black;" >specify the network address with either the subnet mask OR the prefix length</td style="border: 1px solid black;" >
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;" ><code>R1(dhcp-config)#default-router [address]</code></td style="border: 1px solid black;" >
+            <td style="border: 1px solid black;" >specify the IPv4 address of the default gateway (router) the hosts will use</td style="border: 1px solid black;" >
+        </tr>
+    </tbody>
+</table>
+
+<p>That's all a simple DHCP server configuration is comprised of.<br>
+    Some additional configuration can be made with help of the following commands:</p>
+
+<table>
+    <thead>
+        <tr>
+            <td style="border: 1px solid black;" >Command</td style="border: 1px solid black;" >
+            <td style="border: 1px solid black;" >Description</td style="border: 1px solid black;" >
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;" ><code>R1(dhcp-config)#lease [days] ([hours] [minutes])</code></td style="border: 1px solid black;" >
+            <td style="border: 1px solid black;" >specify the time of the lease of every address</td style="border: 1px solid black;" >
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;" ><code>R1(dhcp-config)#dns-server [dns-address-1] ([dns-address-2 ... dns-address-8])</code></td style="border: 1px solid black;" >
+            <td style="border: 1px solid black;" >specify up to 8 DNS server addresses</td style="border: 1px solid black;" >
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;" ><code>R1(dhcp-config)#domain-name [name]</code></td style="border: 1px solid black;" >
+            <td style="border: 1px solid black;" >specify the domain name</td style="border: 1px solid black;" >
+        </tr>
+    </tbody>
+</table>
+
+<h3>The ip helper address:</h3>
+
+<p>If your DHCP server is on a <strong>separate network segment</strong>, you will have to (and can) relay external DHCPv4 requests.<br>
+    You will have to enter the following command on every interface of the router that needs to reach the DHCP server's segment.</p>
+
+<table>
+    <thead>
+        <tr>
+            <td style="border: 1px solid black;" >Command</td style="border: 1px solid black;" >
+            <td style="border: 1px solid black;" >Description</td style="border: 1px solid black;" >
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;" ><code>R1(config-if)#ip helper address [DHCP-server-address]</code></td style="border: 1px solid black;" >
+            <td style="border: 1px solid black;" >indicates the router to relay (instead of discarding) DHCP messages to the DHCP server's address.</td style="border: 1px solid black;" >
+        </tr>
+    </tbody>
+</table>
+
+<!--DCHPV6-->
+<h2 id="dhcpv6">DHCPv6</h2>
+
+<h3>Stateless DHCPv6</h3>
+
+<!-- Conteúdo da seção Stateless DHCPv6 -->
+
+<h2 id="nat">NAT</h2>
+
+<h3>Configuring Static NAT</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th style="border: 1px solid black;">Command</th>
+            <th style="border: 1px solid black;">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config)#ip nat inside source static [local-add] [global-add]</code></td style="border: 1px solid black;">
+            <td style="border: 1px solid black;">configure static nat, specifying the local address that will be mapped to a global address</td style="border: 1px solid black;">
+        </tr>
+    </tbody>
+</table>
+
+<h3>Inside and outside interfaces</h3>
+
+<p> Recall: After this, <strong>always remember</strong> to specify the <strong>inside</strong> and <strong>outside</strong> interfaces.<br>
+    Though it might be easy for us to identify them with our topology diagram, it's not that easy for the router.</p>
+
+<table>
+    <thead>
+        <tr>
+            <th style="border: 1px solid black;">Command</th>
+            <th style="border: 1px solid black;">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config)#interface [int-id]</code></td style="border: 1px solid black;">
+            <td style="border: 1px solid black;">enter configuration mode for the <em>inside</em> interface</td style="border: 1px solid black;">
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-if)#ip nat inside</code></td style="border: 1px solid black;">
+            <td style="border: 1px solid black;"></td style="border: 1px solid black;">
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config)#interface [int-id]</code></td style="border: 1px solid black;">
+            <td style="border: 1px solid black;">enter configuration mode for the <em>outside</em> interface</td style="border: 1px solid black;">
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-if)#ip nat outside</code></td style="border: 1px solid black;">
+            <td style="border: 1px solid black;"></td style="border: 1px solid black;">
+        </tr>
+    </tbody>
+</table>
+
+<h3>Configuring Dynamic NAT</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th style="border: 1px solid black;">Command</th>
+            <th style="border: 1px solid black;">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config)#ip nat pool [pool-name] [start-address] [end-address] {netmask [mask] \| prefix-length [prefix-length]}</code></td style="border: 1px solid black;">
+            <td style="border: 1px solid black;">create the pool of routable addresses that hosts will use to exit the private network</td style="border: 1px solid black;">
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>access-list [number] {permit \| deny} [source] [wildcard mask]</code></td style="border: 1px solid black;">
+            <td style="border: 1px solid black;">create an access list to blah blah</td style="border: 1px solid black;">
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>ip nat inside source list [acl-number] pool [pool name]</code></td style="border: 1px solid black;">
+            <td style="border: 1px solid black;">we now bind the pool to the ACL</td style="border: 1px solid black;">
+        </tr>
+    </tbody>
+</table>
+
+<p> Lastly, <strong>DO NOT forget to <a href="#inside-and-outside-interfaces">specify the inside and outside interfaces</a></strong></p>
+
+<hr>
+<!--HSRP-->
+<h2 id="hsrp">HSRP</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th style="border: 1px solid black;">Command</th>
+            <th style="border: 1px solid black;">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-if)#standby version 2</code></td style="border: 1px solid black;">
+            <td style="border: 1px solid black;">(optional) specify HSRP version 2 will be used. Otherwise, your HSRP instance will be running in version 1 by default.</td style="border: 1px solid black;">
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-if)#standby [group] ip [virtual-ip]</code></td style="border: 1px solid black;">
+            <td style="border: 1px solid black;">specify the router group and the virtual gateway's IP address</td style="border: 1px solid black;">
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-if)#standby [group] priority [0-255]</code></td style="border: 1px solid black;">
+            <td style="border: 1px solid black;">(optional) specify each router a priority for <strong>active router</strong> election</td style="border: 1px solid black;">
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-if)#standby [group] preempt</code></td style="border: 1px solid black;">
+            <td style="border: 1px solid black;">(optional) enables <strong>preemption</strong>, i.e., a router with higher priority will take the active role if current active router's priority is lower</td style="border: 1px solid black;">
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-if)#standby [group] timers [hello-timer] [hold-timer]</code></td style="border: 1px solid black;">
+            <td style="border: 1px solid black;">specify hello and hold (dead) timers. HSRP automatically ensures that the hold timer value is greater than the hello timer value to avoid incorrect behavior.</td style="border: 1px solid black;">
+        </tr>
+    </tbody>
+</table>
+
+<p><strong>WARNING:</strong> <strong>ALWAYS use the SAME HSRP version on your groups/topologies</strong><br>
+For Cisco routers, having instances of the 2 different HSRP versions running is like having two different HSRP groups. Hence, you will come across a duplicate address error (assuming you configured HSRPv1 and HSRPv2 using the same virtual router address).</p>
+
+<h3> HSRPv1 vs HSRPv2: What's different?</h3>
+
+<ul>
+    <li>v2 supports IPv6, v1 does NOT.</li>
+    <li>v2 supports 4095 groups, v1 supports 255.</li>
+    <li>v2 sends multicast HSRP traffic to <code>224.0.0.102</code>, v1 multicasts to <code>224.0.0.2</code></li>
+    <li>the <strong>virtual MAC addresses are also different</strong>
+        <ul>
+            <li>v1: <code>0000.0C07.ACxx</code></li>
+            <li>v2: <code>0000.0C9F.Fxxx</code></li>
+            <li> the <code>x</code> characters at the end are replaced by the <strong>group number</strong> in HEX.</li>
+        </ul>
+    </li>
+</ul>
+
+<hr>
+<h1 id="AD">Appendix: Common administrative distance (AD) values:</h1>
+
+<p>Default values:</p>
+
+<table>
+    <thead>
+        <tr>
+            <th style="border: 1px solid black;">code</th>
+            <th style="border: 1px solid black;">type</th>
+            <th style="border: 1px solid black;">AD value</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;"><code>C</code></td>
+            <td style="border: 1px solid black;">Directly connected network</td>
+            <td style="border: 1px solid black;"><code>0</code></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>S</code></td>
+            <td style="border: 1px solid black;">Static route</td>
+            <td style="border: 1px solid black;"><code>1</code></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>D</code></td>
+            <td style="border: 1px solid black;">Internal EIGRP</td>
+            <td style="border: 1px solid black;"><code>90</code></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>O</code></td>
+            <td style="border: 1px solid black;">OSPF</td>
+            <td style="border: 1px solid black;"><code>110</code></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R</code></td>
+            <td style="border: 1px solid black;">RIP</td>
+            <td style="border: 1px solid black;"><code>120</code></td>
+        </tr>
+    </tbody>
+</table>
+
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<p><a href="#dynamic-routing-ospf">Back to OSPF verification</a></p>
+<p><a href="#eigrp">Back to EIGRP verification</a></p>
+<p><a href="#rip">Back to RIP</a></p>
+
+<h1 id="ApIPV4">Appendix: IPv4 address classes</h1>
+
+<p>There are five class groups in which IPv4 addresses are segmented: A, B, C, D, and E.<br>
+ Classes D and E are reserved groups.<br>
+- Class D addresses are <strong>multicast groups</strong><br>
+- Class E addresses are reserved for research purposes</p>
+
+<table>
+    <thead>
+        <tr>
+            <th style="border: 1px solid black;">Class</th>
+            <th style="border: 1px solid black;">Range (first octet)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;">A</td>
+            <td style="border: 1px solid black;"><code>1 - 127</code></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;">B</td>
+            <td style="border: 1px solid black;"><code>128 - 191</code></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;">C</td>
+            <td style="border: 1px solid black;"><code>192 - 223</code></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;">D</td>
+            <td style="border: 1px solid black;"><code>224 - 239</code></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;">E</td>
+            <td style="border: 1px solid black;"><code>240 - 255</code></td>
+        </tr>
+    </tbody>
+</table>
+
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+
+<h1 id="ApPIPV4">Appendix: Private IPv4 address ranges</h1>
+
+<p>The following private IPv4 address spaces are defined in RFC 1918 ("Address Allocation for Private Internets").<br>
+These addresses are used within private networks and are thus NOT routable to the <strong>public Internet</strong>.<br>
+To forward traffic from a private to a public network, you'd use Network Address Translation (NAT), defined in RFC 3022.<br>
+NAT configuration on Cisco routers is covered <a href="#nat">here</a>.</p>
+
+<table>
+    <thead>
+        <tr>
+            <th style="border: 1px solid black;">Class</th>
+            <th style="border: 1px solid black;">Range (CIDR notation)</th>
+            <th style="border: 1px solid black;">Range (start - end)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;">A</td>
+            <td style="border: 1px solid black;"><code>10.0.0.0/8</code></td>
+            <td style="border: 1px solid black;"><code>10.0.0.0 - 10.0.0.255</code></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;">B</td>
+            <td style="border: 1px solid black;"><code>172.16.0.0/12</code></td>
+            <td style="border: 1px solid black;"><code>172.16.0.0 - 172.31.255.255</code></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;">C</td>
+            <td style="border: 1px solid black;"><code>192.168.0.0/16</code></td>
+            <td style="border: 1px solid black;"><code>192.168.0.0 - 192.168.255.255</code></td>
+        </tr>
+    </tbody>
+</table>
+
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+
+<hr>
+
+<h1>Legacy section (CCNA version 6, 200-125 exam)</h1>
+
+<p><strong>WARNING:</strong> <strong>Attention:</strong> the following topics are no longer on the <strong>current</strong> version (7) of the 200-301 CCNA exam.</p>
+
+<h2 id="rip">Dynamic routing: RIP</h2>
+
+<h3>RIPv1 configuration</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th style="border: 1px solid black;">Command</th>
+            <th style="border: 1px solid black;">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config)#router rip</code></td>
+            <td style="border: 1px solid black;">enter router configuration mode, with RIP as the routing protocol</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-router)#network [network-id]</code></td>
+            <td style="border: 1px solid black;">specify the network segment address. Note that this is done without the <strong>subnet mask</strong>.</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-router)#passive-interface [int-id]</code></td>
+            <td style="border: 1px solid black;">(optional) - prevent an interface from sending RIP updates</td>
+        </tr>
+    </tbody>
+</table>
+
+<p> For safety reasons, interfaces that do NOT need to send RIP updates (e.g., interfaces facing network segments with hosts instead of other routers) should be configured as passive. It's also a good practice as RIP updates on these segments would be nothing but wasted bandwidth.<br>
+ As you see, NO subnet mask information is configured. When forwarding updates, the router uses either the mask configured on the local interface or the default mask based on the address class (A, B, or C).<br>
+ You can find out more about address classes <a href="#ApIPV4">here</a><br>
+<strong>WARNING:</strong> Because of this, your networks on a RIPv1 scheme <strong>MUST BE CONTIGUOUS</strong>, meaning that VLSM or supernetting is not supported by version 1 of RIP<br>
+ Recall: RIP's default AD is <code>120</code><br>
+You can find common AD values <a href="#AD">here</a>.</p>
+
+<h3>Additional RIPv1 configuration</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th style="border: 1px solid black;">Command</th>
+            <th style="border: 1px solid black;">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-router)#default-information originate</code></td>
+            <td style="border: 1px solid black;"><strong>if a <a href="#Static-Routing">default static route</a> is configured on the router</strong> propagate the default route to other routers receiving RIP updates</td>
+        </tr>
+    </tbody>
+</table>
+<h2>RIPv2 configuration</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th style="border: 1px solid black;">Command</th>
+            <th style="border: 1px solid black;">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config)#router rip</code></td>
+            <td style="border: 1px solid black;">enter router configuration mode, with RIP as the routing protocol</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-router)#version 2</code></td>
+            <td style="border: 1px solid black;">change RIP process version from 1 to 2</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-router)#no auto-summary</code></td>
+            <td style="border: 1px solid black;">disable network auto summarization</td>
+        </tr>
+    </tbody>
+</table>
+
+<p> Recall: by default (without previously configuring version 2), RIP can <strong>receive both</strong> RIPv1 and RIPv2 routing updates.<br>
+ You can see this with the <code>R1#show ip protocols</code> command.</p>
+
+<h2 id="eigrp">Dynamic routing: EIGRP</h2>
+
+<h3>EIGRP Configuration</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th style="border: 1px solid black;">Command</th>
+            <th style="border: 1px solid black;">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config)#router eigrp [AS-number]</code></td>
+            <td style="border: 1px solid black;"><code>[AS-number]</code> value range: 1-65535.</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-router)#eigrp router-id [a.b.c.d]</code></td>
+            <td style="border: 1px solid black;">(optional) manually configure a <strong>router ID</strong>, in an IPv4 address format</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-router)#network [network-address]</code></td>
+            <td style="border: 1px solid black;">add the classful network address for each directly connected network</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-router)#network [network-address] ([wildcard-mask])</code></td>
+            <td style="border: 1px solid black;">add the network address with the wildcard mask, recommended when using classless addresing</td>
+        </tr>
+    </tbody>
+</table>
+
+<p> If no EIGRP router ID is configured, the router will use the highest IPv4 address of any active loopback interface. If the router has NO active loopback interfaces, the router ID will be the highest IPv4 address of any active physical interface.<br>
+ ProTip: How can I easily visualize all the directly connected networks a router has?<br>
+Issue the <code>R1(config)#do show ip route con</code> command.<br>
+It will display the routing table ONLY with the directly connected networks (routes).</p>
+
+<p> Recall: by default, EIGRP does NOT automatically summarize networks.</p>
+
+<h3>EIGRP Verification</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th style="border: 1px solid black;">Command</th>
+            <th style="border: 1px solid black;">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1#show ip protocols</code></td>
+            <td style="border: 1px solid black;">verifies the current configured values for EIGRP (and any additional enabled routing protocol on the device)</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1#show ip eigrp neighbors</code></td>
+            <td style="border: 1px solid black;">displays the nighbor table. Use it to verify the router recognizes its neighbors.</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1#show ip route eigrp</code></td>
+            <td style="border: 1px solid black;">display <strong>only EIGRP</strong> entries in the routing table</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1#show ip eigrp interface</code></td>
+            <td style="border: 1px solid black;">verifies which interface are enabled for EIGRP, number of peers, and transmit queues</td>
+        </tr>
+    </tbody>
+</table>
+
+<p> Recall: (internal) EIGRP's default AD is <code>90</code><br>
+You can find common AD values <a href="#AD">here</a>.<br>
+- The AD for an <strong>EIGRP summary route</strong> is 5.<br>
+- The AD for an <strong>EIGRP external route</strong> is 170.</p>
+
+<h3>EIGRP Fine tuning</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th style="border: 1px solid black;">Command</th>
+            <th style="border: 1px solid black;">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-router)#variance [variance]</code></td>
+            <td style="border: 1px solid black;">change variance to perform <strong>unequal cost load balancing</strong>. <code>[variance]</code> value range: 1-128.</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-router)#auto-summary</code></td>
+            <td style="border: 1px solid black;">enable <strong>automatic summarization</strong></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-router)#redistribute static</code></td>
+            <td style="border: 1px solid black;">propagate a <strong>default static route</strong>. Works on both IPv4 and IPv6.  remember to check routing tables to ensure correct/desired configuration</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-if)#bandwidth [BW in kilobits]</code></td>
+            <td style="border: 1px solid black;">modify the EIGRP metric. <strong>WARNING:</strong> this is done in <strong>interface configuration mode</strong></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-if)#ip hello-interval eigrp [AS-number] [time in seconds]</code></td>
+            <td style="border: 1px solid black;">modify hello interval on IPv4. <strong>WARNING:</strong> this is done in <strong>interface configuration mode</strong></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-if)#ipv6 hello-interval eigrp [AS-number] [time in seconds]</code></td>
+            <td style="border: 1px solid black;">modify hello interval on IPv6. <strong>WARNING:</strong> this is done in <strong>interface configuration mode</strong></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-if)#ip hold-time eigrp [AS-number] [time in seconds]</code></td>
+            <td style="border: 1px solid black;">modify hold timer length on IPv4 <strong>WARNING:</strong> this is done in <strong>interface configuration mode</strong></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-if)#ipv6 hold-time eigrp [AS-number] [time in seconds]</code></td>
+            <td style="border: 1px solid black;">modify hold timer length on IPv6 <strong>WARNING:</strong> this is done in <strong>interface configuration mode</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+<p> Recall: <strong>automatic summarization</strong> is <strong>disabled</strong> by default</p>
+
+<p><strong>WARNING:</strong> When modifying EIGRP hello intervals and hold timers, ALWAYS MAKE SURE your Hello intervals are LESS THAN your hold timers. Otherwise, you could have a <em>flapping link</em> (due to timer misconfiguration, constantly goes up, down, up, ...)</p>
+
+<h2>Dynamic routing: EIGRP for IPv6</h2>
+
+<h3>Configuration</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th style="border: 1px solid black;">Command</th>
+            <th style="border: 1px solid black;">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config)#ipv6 unicast-routing</code></td>
+            <td style="border: 1px solid black;">this <strong>global configuration command</strong> enables the router to forward IPv6 packets</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config)#ipv6 router eigrp [AS-number]</code></td>
+            <td style="border: 1px solid black;">enter router configuration mode for EIGRP for IPv6, specifying the AS number</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-rtr)#eigrp router-id [a.b.c.d]</code></td>
+            <td style="border: 1px solid black;"> The EIGRP for IPv6 process will start running <strong>after</strong> you enter the router ID</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-rtr)#no shutdown</code></td>
+            <td style="border: 1px solid black;"> This is a best practice, since EIGRP for IPv6 has a <strong>shutdown feature</strong></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-rtr)#interface [int-id]</code></td>
+            <td style="border: 1px solid black;">now, go to <strong>each interface</strong> where you want to enable EIGRP for IPv6</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1(config-if)#ipv6 eigrp [AS-number]</code></td>
+            <td style="border: 1px solid black;">use this command with the AS-number you used when configuring EIGRP for IPv6 on <strong>each desired interface</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+<p> Note that the configuration mode prompt when configuring EIGRP for IPv6 is different. While EIGRP for IPv4 is configured under the configuration mode with prompt <code>R1(config-router)#</code>, EIGRP for IPv6 is configured under the mode/prompt <code>R1(config-rtr)#</code></p>
+
+<h3>Verification</h3>
+
+<p>The same process for verification or troubleshooting for IPv4 can be used on IPv6 implementations. Replace <code>ip</code> for <code>ipv6</code> in your commands</p>
+
+<table>
+    <thead>
+        <tr>
+            <th style="border: 1px solid black;">Command</th>
+            <th style="border: 1px solid black;">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1#show ipv6 protocols</code></td>
+            <td style="border: 1px solid black;">verifies the current configured values for EIGRP (and any additional enabled routing protocol on the device)</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1#show ipv6 eigrp neighbors</code></td>
+            <td style="border: 1px solid black;">displays the nighbor table. Use it to verify the router recognizes its neighbors.</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1#show ipv6 route eigrp</code></td>
+            <td style="border: 1px solid black;">display <strong>only EIGRP</strong> entries in the routing table</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;"><code>R1#show ipv6 eigrp interface</code></td>
+            <td style="border: 1px solid black;">verifies which interface are enabled for EIGRP, number of peers, and transmit queues</td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+</body>
+</html>

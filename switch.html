@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCNA Switch command cheat-sheet</title>
+</head>
+
+<body>
+    <div class="Box-sc-g0xbh4-0 jMJFjm">
+        <section aria-labelledby="file-name-id-wide file-name-id-mobile" class="Box-sc-g0xbh4-0 eRvpKx">
+            <div class="Box-sc-g0xbh4-0 cTsUqU js-snippet-clipboard-copy-unpositioned" data-hpc="true">
+                <article class="markdown-body entry-content container-lg" itemprop="text">
+                    <div class="markdown-heading" dir="auto">
+                        <h1 tabindex="-1" class="heading-element" dir="auto">CCNA Switch command cheat-sheet</h1>
+                    </div>
+                    <div class="markdown-heading" dir="auto">
+                        <h4 tabindex="-1" class="heading-element" dir="auto">Useful command collection for Cisco
+                            Switches. Based on Cisco Networking Academy CCNA version 6 and version 7 course material,
+                            and recommended for CCNA exam preparation.</h4>
+                    </div>
+                    <hr>
+                    <div class="markdown-heading" dir="auto">
+                        <h2 tabindex="-1" class="heading-element" dir="auto">Table of contents</h2>
+                    </div>
+                    <ul dir="auto">
+                        <li><a href="#important-show-commands">Important <code>show</code> commands</a></li>
+                        <li><a href="#managing-more-than-one-interface-at-the-same-time">Interface ranges</a></li>
+                        <li><a href="#VLANS"><strong>VLANs</strong></a>
+                            <ul dir="auto">
+                                <li><a href="#configuring-vlans">Configuring VLANs</a></li>
+                                <li><a href="#deleting-a-vlan">Deleting VLANS</a></li>
+                                <li><a href="#configuring-ieee-802.1q-trunk-links">Configuring Trunks</a></li>
+                                <li><a href="#dynamic-trunking-protocol-DTP">Dynamic Trunking Protocol</a></li>
+                                <li><a href="#troubleshooting-vlans">VLAN troubleshooting</a></li>
+                                <li><a href="#troubleshooting-trunks">Trunk link troubleshooting</a></li>
+                                <li><a href="#voice-vlans">Voice VLANs</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#configuring-ssh">Configuring SSH</a></li>
+                        <li><a href="#modifying-ssh-configuration">Modifying SSH configuration</a></li>
+                        <li><a href="#port-security">Port Security</a>
+                            <ul dir="auto">
+                                <li><a href="#closed_lock_with_key-configuring-dynamic-port-security">Configuring
+                                        Dynamic Port Security</a></li>
+                                <li><a href="#closed_lock_with_key-configuring-sticky-port-security">Configuring Sticky
+                                        Port Security</a></li>
+                                <li><a
+                                        href="#closed_lock_with_key-white_check_mark-verifying-port-security">Verifying
+                                        Port Security &amp; secure MAC addresses</a>
+                                    <ul dir="auto">
+                                        <li><a href="#bringing-an-err-disabled-interface-back-up"><code>Err-disabled</code>
+                                                interfaces</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="#VLAN-trunking-protocol-VTP">VLAN management with VTP</a>
+                            <ul dir="auto">
+                                <li><a href="#VTP-verification">VTP verification</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#general-stp-verification-commands">STP</a></li>
+                        <li><a href="#etherchannel">EtherChannel</a></li>
+                    </ul>
+                    <hr>
+                    <div class="markdown-heading" dir="auto">
+                        <h2 tabindex="-1" class="heading-element" dir="auto">Before we start: Configuration modes</h2>
+                    </div>
+                    <p dir="auto">Three basic configuration modes we MUST be familiar with already (you will see them
+                        below, a lot).</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Mode (prompt)</th>
+                                <th style="border: 1px solid black;">Device configuration mode</th>
+                                <th style="border: 1px solid black;">"Mode change" command (current -&gt; next)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1&gt;</code></td>
+                                <td style="border: 1px solid black;">EXEC mode</td>
+                                <td style="border: 1px solid black;">type <code>enable</code> to pass to next mode</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#</code></td>
+                                <td style="border: 1px solid black;">Privileged EXEC mode</td>
+                                <td style="border: 1px solid black;">type <code>configure terminal</code> to pass to next mode</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#</code></td>
+                                <td style="border: 1px solid black;">Global congiguration mode</td>
+                                <td style="border: 1px solid black;">N/A</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p dir="auto">Common abbreviations to the commands above (separated by commas):</p>
+                    <div class="snippet-clipboard-content notranslate position-relative overflow-auto">
+                        <pre class="notranslate"><code>en, ena ; conf t, config term
+        </code></pre>
+                        
+                    </div>
+                    <hr>
+                    <div class="markdown-heading" dir="auto">
+                        <h2 tabindex="-1" class="heading-element" dir="auto" id="important-show-commands">Important <code>show</code> commands:</h2>
+                        
+                    </div>
+                    <p dir="auto">Note that these commands are executed on privileged EXEC mode (<code>S1#</code>
+                        prompt).<br>
+                        You can execute them from global configuration mode (<code>S1(config)#</code> prompt) by adding
+                        the <code>do</code> keyword before the command.<br>
+                        example:<br>
+                        <code>S1(config)#do show ip interface brief</code>
+                    </p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show running-config</code></td>
+                                <td style="border: 1px solid black;">N/A</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show history</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show interface [int-id]</code></td>
+                                <td style="border: 1px solid black;">useful to detect errors or verify packets are being sent and received</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show mac address-table</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show port-security</code></td>
+                                <td style="border: 1px solid black;">displays Port Security configuration for all interfaces</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show port-security interface [int-id]</code></td>
+                                <td style="border: 1px solid black;">display Port Security configuration of an interface</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show vlan</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show vlan brief</code></td>
+                                <td style="border: 1px solid black;"><strong>only</strong> displays VLANs, statuses, names, and assigned ports</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show interface vlan [id]</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show interfaces trunk</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div class="markdown-heading" dir="auto">
+                        <h2 tabindex="-1" class="heading-element" dir="auto">Filtering information from
+                            <code>show</code> commands:</h2>
+                    </div>
+                    <p dir="auto">Some commands, such as <code>show running-config</code>, generate multiple lines of
+                        output.</p>
+                    <p dir="auto">To filter output, you can use the <em>pipe</em> (<code>|</code>) character along with
+                        a <strong>filtering parameter</strong> and a <strong>filtering expression</strong>.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Filtering parameters</th>
+                                <th style="border: 1px solid black;">Effect</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>section [filtering-expression]</code></td>
+                                <td style="border: 1px solid black;">shows the section of the <em>filtering expression</em></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>include [filtering-expression]</code></td>
+                                <td style="border: 1px solid black;">includes all lines of output that match the <em>filtering expression</em>
+                                    <strong>ONLY</strong></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>exclude [filtering-expression]</code></td>
+                                <td style="border: 1px solid black;">excludes all lines of output that match the <em>filtering expression</em></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>begin [filtering-expression]</code></td>
+                                <td style="border: 1px solid black;">shows all the lines of output <strong>beginning from</strong> the line that matches
+                                    the <em>filtering expression</em></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 tabindex="-1" class="heading-element" dir="auto">Usage:</h3>
+                    </div>
+                    <p dir="auto">Here's an example of the usage of filtering with a <code>show</code> command:<br>
+                        <code>R1#show running-config | include line con</code>
+                    </p>
+                    <p dir="auto">💡 ProTip: By default, the screen of output consists of 24 lines. Should you want to
+                        change the number of output lines displayed on the terminal screen, you can use the command:
+                        <code>R1# terminal length [number-of-lines]</code><br>
+                        <g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> Unfortunately, this command is NOT
+                        supported in Cisco Packet Tracer (tested on version 7.2.2).
+                    </p>
+                    <hr>
+                    <div class="markdown-heading" dir="auto">
+                        <h2 tabindex="-1" class="heading-element" dir="auto" id="managing-more-than-one-interface-at-the-same-time">Managing more than one interface at the
+                            same time</h2>
+                    </div>
+                    <p dir="auto">When we want to execute a sequence on commands on more than one port, selecting an
+                        interface range makes the job a lot easier.<br>
+                        Use: <code>S1(config)#interface range [typeModule/firstNumber]-[lastNumber]</code></p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;"><em>typeModule</em>s</th>
+                                <th style="border: 1px solid black;">some possible abbreviations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>FastEthernet</code></td>
+                                <td style="border: 1px solid black;"><code>f, fa, ...</code></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>GigabitEthernet</code></td>
+                                <td style="border: 1px solid black;"><code>g, gi, gig, ...</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p dir="auto">Here's an example:
+                        <code>S1(config)#interface range f0/1-12</code>
+                    </p>
+                    <p dir="auto">Note that you can select multiple ranges on a single command.<br>
+                        Here's an example:
+                        <code>S1(config)#interface range f0/1-12, 15-24, g0/1-2</code>
+                    </p>
+                    <p dir="auto">You might need to use it frequently on scenarios where the following blocks of
+                        commands are used.</p>
+                    <hr>
+                    <div class="markdown-heading" dir="auto">
+                        <h2 tabindex="-1" class="heading-element" dir="auto" id="VLANS">VLANs</h2>
+                    </div>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 tabindex="-1" class="heading-element" dir="auto" id="configuring-vlans">Configuring VLANs</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#vlan [vlan-ID]</code></td>
+                                <td style="border: 1px solid black;">create VLAN and assign its VLAN number</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-vlan)#name [someName]</code></td>
+                                <td style="border: 1px solid black;">assign a name to the VLAN</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p dir="auto">Now it is time to assign ports to the newly created VLAN</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#interface [int-id]</code></td>
+                                <td style="border: 1px solid black;">remember, <code>interface range</code> might be useful</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport mode access</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport access vlan [vlan-id]</code></td>
+                                <td style="border: 1px solid black;">assign/change port VLAN</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 tabindex="-1" class="heading-element" dir="auto" id="deleting-a-vlan">Deleting a VLAN</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#no vlan [vlan-id]</code></td>
+                                <td style="border: 1px solid black;"><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> deletes specified VLAN</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#delete flash:vlan.dat</code></td>
+                                <td style="border: 1px solid black;"><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> erases <strong>the whole VLAN
+                                        database</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 tabindex="-1" class="heading-element" dir="auto">Removing interface(s) from a VLAN</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#interface [int-id]</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#no switchport access vlan [vlan-id]</code></td>
+                                <td style="border: 1px solid black;">remove the VLAN from the port</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="markdown-heading" dir="auto">
+                        <h4 tabindex="-1" class="heading-element" dir="auto">Know the difference!</h4>
+                    </div>
+                    <blockquote>
+                        <p dir="auto">💡 When a VLAN is deleted. Any switchport assigned to that VLAN <strong>becomes
+                                inactive</strong><br>
+                            💡 On the other hand, when the <code>no switchport access vlan [vlan-id]</code> is executed
+                            on a switchport, the port will be returned to VLAN 1</p>
+                    </blockquote>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 tabindex="-1" class="heading-element" dir="auto" id="configuring-ieee-802.1q-trunk-links">Configuring IEEE 802.1q trunk links</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#interface [int-id]</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport mode trunk</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport trunk native vlan [vlan-id]</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport trunk allowed vlan [vlan-list]</code></td>
+                                <td style="border: 1px solid black;"><strong>All</strong> allowed VLAN IDs.</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport trunk allowed vlan remove [vlan-id]</code></td>
+                                <td style="border: 1px solid black;">🚷 <strong>PROHIBITS ONLY</strong> the VLAN with the specified ID on the trunk
+                                    interface</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p dir="auto">💡 Tip: You might also want to check out the router commands necessary for
+                        inter-VLAN-routing via <a
+                            href="./Router.html#configuring-Router-on-a-stick-inter-VLAN-routing">Router-On-A-Stick</a>
+                    </p>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 tabindex="-1" class="heading-element" dir="auto" id="dynamic-trunking-protocol-DTP">Dynamic Trunking Protocol (DTP)</h3>
+                    </div>
+                    <p dir="auto">This Cisco proprietary protocol contributes in the configuration of trunking
+                        interfaces between Cisco switches.</p>
+                    <p dir="auto">💡 Remember: The <strong>default</strong> configuration for interfaces on Cisco
+                        Catalyst 2960 and 3650 switches is <em>dynamic auto</em>.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport mode trunk</code></td>
+                                <td style="border: 1px solid black;">configures an interface to specifically be in <strong>trunk mode</strong>. Also
+                                    negotiates to convert the neighboring link into a trunk.</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport mode access</code></td>
+                                <td style="border: 1px solid black;">configures an interface to specifically be in <strong>access mode</strong>, a
+                                    NON-trunk interface, even if its neighboring interface is in mode <code>trunk</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport mode dynamic auto</code></td>
+                                <td style="border: 1px solid black;">interface will convert into a <strong>trunk interface</strong> if its neighboring
+                                    interface is in <strong>mode <code>trunk</code> or <code>desirable</code>
+                                        ONLY</strong></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport mode dynamic desirable</code></td>
+                                <td style="border: 1px solid black;">interface will convert into a <strong>trunk interface</strong> if its neighboring
+                                    interface is in <strong>mode <code>trunk</code>, <code>dynamic auto</code>, or
+                                        <code>dynamic desirable</code> ONLY</strong></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport nonegotiate</code></td>
+                                <td style="border: 1px solid black;">⛔ stops DTP negotiation, in which interfaces may engage, as you saw above, i.e., an
+                                    interface will NOT change its mode even if the neighboring interface could change it
+                                    through negotiation</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 id="troubleshooting-vlans" class="heading-element" dir="auto">Troubleshooting VLANs</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show vlan</code></td>
+                                <td style="border: 1px solid black;">check whether a port belongs to the expected VLAN</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show mac address-table</code></td>
+                                <td style="border: 1px solid black;">check which addresses were learned on a particular port of the switch, and to which
+                                    VLAN that port is assigned</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show interfaces [int-id] switchport</code></td>
+                                <td style="border: 1px solid black;">helpful in verifying an inactive VLAN is assigned to a port</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 id="troubleshooting-trunks" class="heading-element" dir="auto">Troubleshooting Trunks</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show interfaces trunk</code></td>
+                                <td style="border: 1px solid black;">- check native VLAN id matches on both ends of link - check whether a trunk link has
+                                    been established between switches</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 id="voice-vlans" class="heading-element" dir="auto">Voice VLANs</h3>
+                    </div>
+                    <p dir="auto">VLANs supporting voice traffic usually have quality of service (QoS). Voice traffic
+                        must have a <em>trusted</em> label.</p>
+                    <blockquote>
+                        <p dir="auto">Note that the implementation of QoS is beyond the scope of the CCNA2 (version 6)
+                            course.</p>
+                    </blockquote>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#interface [int-id]</code></td>
+                                <td style="border: 1px solid black;">access interface on which the voice VLAN will be assigned</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport mode access</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport access vlan [vlan-id]</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#mls qos trust cos</code></td>
+                                <td style="border: 1px solid black;">set trusted state of an interface and indicate which packet fields are used to
+                                    classify traffic</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport voice vlan [vlan-id]</code></td>
+                                <td style="border: 1px solid black;">assign a voice VLAN to that port</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div class="markdown-heading" dir="auto">
+                        <h2 id="configuring-ssh" class="heading-element" dir="auto">Configuring SSH</h2>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show ip ssh</code></td>
+                                <td style="border: 1px solid black;">Use it to verify that the switch supports SSH</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#ip domain-name [domain-name]</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#crypto key generate rsa</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#username [admin] secret [ccna]</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#line vty 0 15</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-line)#transport input ssh</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-line)#login local </code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-line)#exit</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#ip ssh version 2</code></td>
+                                <td style="border: 1px solid black;">enable SSH version 2</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#crypto key zeroise rsa</code></td>
+                                <td style="border: 1px solid black;"><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> use to <strong>delete</strong>
+                                    RSA key pair</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 id="modifying-ssh-configuration" class="heading-element" dir="auto">Modifying SSH configuration</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#ip ssh time-out [time]</code></td>
+                                <td style="border: 1px solid black;">Change timeout setting (time in seconds)</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#ip ssh authentication-retries [retries]</code></td>
+                                <td style="border: 1px solid black;">Change number of allowed authentication attempts</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p dir="auto">Verify your newly configured settings with <code>S1#show ip ssh</code></p>
+                    <hr>
+                    <div class="markdown-heading" dir="auto">
+                        <h2 id="port-security" class="heading-element" dir="auto">Port Security</h2>
+                    </div>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 id="closed_lock_with_key-configuring-dynamic-port-security" class="heading-element" dir="auto">🔐 Configuring Dynamic Port Security</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#interface [int-id]</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport mode access</code></td>
+                                <td style="border: 1px solid black;">Set interface mode to <em>access</em>.</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport port-security</code></td>
+                                <td style="border: 1px solid black;">Enable port security on the interface</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport port-security violation [violation-mode]</code></td>
+                                <td style="border: 1px solid black;">set violation mode (<code>protect</code>, <code>restrict</code>,
+                                    <code>shutdown</code>)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <blockquote>
+                        <p dir="auto">🏆 <strong>Best practice:</strong> It is a best security and general practice to
+                            "hard-type" the <code>switchport mode access</code> command. This also applies to Trunk
+                            ports (<code>switchport mode trunk</code>).</p>
+                    </blockquote>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 id="closed_lock_with_key-configuring-sticky-port-security" class="heading-element" dir="auto">🔐 Configuring Sticky Port Security</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#interface [int-id]</code></td>
+                                <td style="border: 1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport mode access</code></td>
+                                <td style="border: 1px solid black;">Set interface mode to <em>access</em>.</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport port-security</code></td>
+                                <td style="border: 1px solid black;">Enable port security on the interface</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport port-security maximum [max-addresses]</code></td>
+                                <td style="border: 1px solid black;">Set maximum number of secure MAC addresses allowed on port</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport port-security mac-address sticky</code></td>
+                                <td style="border: 1px solid black;">Enable sticky learning</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport port-security violation [violation-mode]</code></td>
+                                <td style="border: 1px solid black;">set violation mode (<code>protect</code>, <code>restrict</code>,
+                                    <code>shutdown</code>)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 id="#closed_lock_with_key-white_check_mark-verifying-port-security" class="heading-element" dir="auto">🔐 ✅ Verifying Port Security &amp; secure
+                            MAC addresses</h3>
+                    </div>
+                    <p dir="auto">Now that we have configured Port Security, the following commands will be handy to
+                        verify and troubleshoot.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show port-security interface [int-id]</code></td>
+                                <td style="border: 1px solid black;">displays interface's Port Security configuration. If violations occured, they can be
+                                    checked here.</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show port-security address</code></td>
+                                <td style="border: 1px solid black;">displays secure MAC addresses configured on <strong>all switch interfaces</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show interface [int-id] status</code></td>
+                                <td style="border: 1px solid black;">displays port status. Useful to verify if an interface is in
+                                    <code>err-disabled</code> status.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 id="bringing-an-err-disabled-interface-back-up" class="heading-element" dir="auto">Bringing an <code>err-disabled</code>
+                            interface back up</h3>
+                    </div>
+                    <p dir="auto">💡 Recall: After a violation, a port in <strong>Shutdown violation mode</strong>
+                        changes its status to <em>error disabled</em>, and is effectively <strong>shut down</strong>. To
+                        resume operation (sending and receiving traffic), we must bring it back up. Here's how:</p>
+                    <ul dir="auto">
+                        <li>Access the interface configuration mode with <code>S1(config)#interface [int-id]</code>.
+                        </li>
+                        <li>Shut the interface down using <code>S1(config-if)#shutdown</code>.</li>
+                        <li>Bring the interface back up using <code>S1(config-if)#no shutdown</code>.</li>
+                    </ul>
+                    <hr>
+                    <div class="markdown-heading" dir="auto">
+                        <h2 tabindex="-1" class="heading-element" dir="auto">VLAN trunking protocol (VTP)</h2>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#vtp mode [mode]</code></td>
+                                <td style="border: 1px solid black;">mode can be <code>server</code> or <code>client</code></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#vtp password [password]</code></td>
+                                <td style="border: 1px solid black;">optional - <g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> password is
+                                    case-sensitive</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#vtp domain [name]</code></td>
+                                <td style="border: 1px solid black;">optional - <g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> domain name is case
+                                    sensitive as well</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#vtp pruning</code></td>
+                                <td style="border: 1px solid black;">optional - configure VTP pruning on server</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#vtp version 2</code></td>
+                                <td style="border: 1px solid black;">optional - enables VTP version 2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p dir="auto">❗ After this, remember to enable trunk links between the <em>VTP domain</em> switches
+                        so <em>VTP advertisements</em> can be shared among the switches.
+                        This command sequence is all that's needed to get VTP running on our <em>VTP domain</em> ✅</p>
+                    <p dir="auto">💡 Tip: There are 3 VTP versions. Versions 1 and 2 (which are within the scope of the
+                        CCNA exam) <strong>DO NOT</strong> support <em>extended-range VLANS</em> (ID from 1006 to 4095).
+                        VTP version 3 (NOT covered on the CCNA exam) does support such VLANS.</p>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 tabindex="-1" class="heading-element" dir="auto">VTP verification</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show vtp status</code></td>
+                                <td style="border: 1px solid black;">verify your configuration and the status of VTP on the device</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show vtp password</code></td>
+                                <td style="border: 1px solid black;">verify the configured VTP password</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show vlan brief</code></td>
+                                <td style="border: 1px solid black;">this VLAN verification command might be useful as well when verifying VTP
+                                    configuration</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div class="markdown-heading" dir="auto">
+                        <h2 tabindex="-1" class="heading-element" dir="auto">Spanning Tree Protocol</h2>
+                    </div>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 tabindex="-1" class="heading-element" dir="auto">Bridge ID configuration</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#spanning-tree vlan [vlan-id] root primary</code></td>
+                                <td style="border: 1px solid black;">ensures this switch has the lowest priority value</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#spanning-tree vlan [vlan-id] root secondary</code></td>
+                                <td style="border: 1px solid black;">Use if the configuration of an alternative bridge is desired. Sets the switch
+                                    priority value to ensure it becomes the root bridge if the primary root bridge
+                                    fails.</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#spanning-tree vlan [vlan-id] priority [priority]</code></td>
+                                <td style="border: 1px solid black;">manually configure the bridge's priority value</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p dir="auto">💡 Recall: priority values are between 0 and 61,440.<br>
+                        <g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> The priority value can only be a multiple
+                        of 4096
+                    </p>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 tabindex="-1" class="heading-element" dir="auto">Bridge ID Verification</h3><
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show spanning-tree</code></td>
+                                <td style="border: 1px solid black;">verify current spanning-tree instances and root bridges</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 tabindex="-1" class="heading-element" dir="auto">PortFast and BPDU guard</h3>
+                    </div>
+                    <p dir="auto">Must only be configured on interfaces connected point-to-point to an end device</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#interface [int-id]</code></td>
+                                <td style="border: 1px solid black;">access the interface</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#interface range [int-type][lowest-id]-[highest-id]</code></td>
+                                <td style="border: 1px solid black;">access a range of contiguous interfaces if necessary</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport mode access</code></td>
+                                <td style="border: 1px solid black;">as a good practice, hard-type this command so the switchport is in access mode</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#spanning-tree portfast</code></td>
+                                <td style="border: 1px solid black;">enables PortFast on the access port(s)</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#spanning-tree bpduguard enable</code></td>
+                                <td style="border: 1px solid black;">enables BPDU Guard on the access port(s)</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#spanning-tree portfast default</code></td>
+                                <td style="border: 1px solid black;"><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> configures PortFast to be the
+                                    default for all switch interfaces</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#spanning-tree bpduguard default</code></td>
+                                <td style="border: 1px solid black;"><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> configures BPDU Guard to be
+                                    the default for all switch interfaces</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 tabindex="-1" class="heading-element" dir="auto">PortFast and BPDU guard verification</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;">``S1#show running-config</td>
+                                <td style="border: 1px solid black;">begin spanning-tree``</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show running-config interface [int-id]</code></td>
+                                <td style="border: 1px solid black;">display the current configuration portion corresponding to the interface</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 tabindex="-1" class="heading-element" dir="auto">Configuring Rapid PVST+</h3>
+                    </div>
+                    <p dir="auto">PVST+ is the STP flavor operating by default on Cisco switches.
+                        To configure Rapid PVST+, we just need to type a global command.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#spanning-tree mode rapid-pvst</code></td>
+                                <td style="border: 1px solid black;">configure Rapid PVST+ as the STP mode on the switch</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#spanning-tree link-type point-to-point</code></td>
+                                <td style="border: 1px solid black;">specify that a link is point-to-point</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#clear spanning-tree detected-protocols (interface [int-id])</code></td>
+                                <td style="border: 1px solid black;">forces renegotiation with neighboring switches on all interfaces or the specified
+                                    interface</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 tabindex="-1" class="heading-element" dir="auto">General STP verification commands</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show spanning-tree</code></td>
+                                <td style="border: 1px solid black;">display STP information - useful to find information about the bridge you are in,
+                                    and the root bridge at a glance</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show spanning-tree active</code></td>
+                                <td style="border: 1px solid black;">display STP information for active interfaces only</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show spanning-tree brief</code></td>
+                                <td style="border: 1px solid black;">at-a-glance information for all STP instances running on the switch</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show spanning-tree detail</code></td>
+                                <td style="border: 1px solid black;">detailed information for all STP instances running on the switch</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show spanning-tree interface [int-id]</code></td>
+                                <td style="border: 1px solid black;">STP information for the specified interface</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show spanning-tree vlan [vlan-id]</code></td>
+                                <td style="border: 1px solid black;">STP information for the specified VLAN</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1#show spanning-tree summary</code></td>
+                                <td style="border: 1px solid black;">summary of STP port states</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div class="markdown-heading" dir="auto">
+                        <h2 tabindex="-1" class="heading-element" dir="auto">EtherChannel</h2>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#interface range [start-int]-[end-int]</code></td>
+                                <td style="border: 1px solid black;">start by selecting the interfaces to be bundled into a <strong>single logical
+                                        link</strong>, i.e., the EtherChannel.</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if-range)#channel-group [number] mode [mode]</code></td>
+                                <td style="border: 1px solid black;">specify the group ID (<code>1</code> to <code>6</code>, inclusive) and <a
+                                        href="#available-etherchannel-modes">operation mode</a> of the EtherChannel</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config)#interface port-channel [number]</code></td>
+                                <td style="border: 1px solid black;">enter the <strong>port channel interface configuration mode</strong> to change
+                                    settings</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="markdown-heading" dir="auto">
+                        <h3 tabindex="-1" class="heading-element" dir="auto">PortChannel interface additional
+                            configuration</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">Command</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport mode trunk</code></td>
+                                <td style="border: 1px solid black;">set the interface in trunking mode, so it can carry traffic of multiple VLANs</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport trunk native vlan [native-vlan-id]</code></td>
+                                <td style="border: 1px solid black;">specify the link's native VLAN</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport trunk allowed vlan [vlan-id-1 (,vlan-id-2,...)]</code>
+                                </td>
+                                <td style="border: 1px solid black;">specify allowed VLANs (VLAN IDs) on trunk link</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>S1(config-if)#switchport trunk allowed vlan add [vlan-id-1 (,vlan-id-2,...)]</code>
+                                </td>
+                                <td style="border: 1px solid black;"><strong>add</strong> VLANs to the list of <strong>already allowed</strong> VLANs on
+                                    the trunk link</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p dir="auto"><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> The <strong>EtherChannel
+                            negotiation protocols</strong> you use for your interface bundles <strong>MUST MATCH ON BOTH
+                            ENDS</strong>, whether it is LACP, PAgP (Cisco Proprietary), or no protocol (<code>on</code>
+                        mode).</p>
+                    <div class="markdown-heading" dir="auto">
+                        <h4 tabindex="-1" class="heading-element" dir="auto">Available EtherChannel modes</h4>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black;">EC mode</th>
+                                <th style="border: 1px solid black;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>active</code></td>
+                                <td style="border: 1px solid black;">Enable LACP unconditionally</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>auto</code></td>
+                                <td style="border: 1px solid black;">Enable PAgP only if another PAgP device is detected.</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>desirable</code></td>
+                                <td style="border: 1px solid black;">Enable PAgP unconditionally</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>on</code></td>
+                                <td style="border: 1px solid black;">Enable EtherChannel only</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;"><code>passive</code></td>
+                                <td style="border: 1px solid black;">Enable LACP only if another LACP device is detected</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p dir="auto"><a href="#etherchannel">Back to beginning of section</a></p>
+                </article>
+            </div><button hidden="" data-hotkey="Control+a"></button>
+        </section>
+    </div>
+</body>
+
+</html>
