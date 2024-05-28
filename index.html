@@ -10,9 +10,19 @@
 			background-color: #f0f0f0;
 			margin: 0;
 			display: flex;
+			flex-direction: column;
 			align-items: center;
 			justify-content: center;
 			min-height: 100vh;
+			padding: 20px;
+		}
+		h1 {
+			color: #333;
+			margin: 0;
+			font-size: 2.5em;
+			font-weight: 700;
+			margin-bottom: 20px;
+			text-align: center;
 		}
 		.card {
 			background-color: #fff;
@@ -20,13 +30,8 @@
 			border-radius: 15px;
 			box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 			text-align: center;
-		}
-		h1 {
-			color: #333;
-			margin-top: 0;
-			font-size: 2.5em;
-			font-weight: 700;
-			margin-bottom: 20px;
+			width: 100%;
+			max-width: 400px;
 		}
 		.button-container {
 			display: flex;
@@ -37,7 +42,7 @@
 		button {
 			background-color: #0f61d4;
 			color: #fff;
-			padding: 15px 30px;
+			padding: 15px;
 			border: none;
 			border-radius: 30px;
 			cursor: pointer;
@@ -45,6 +50,8 @@
 			font-weight: 500;
 			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 			transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
+			width: 100%;
+			max-width: 300px;
 		}
 		button:hover {
 			background-color: #003580;
@@ -54,17 +61,17 @@
 		@media (max-width: 600px) {
 			.card {
 				padding: 20px;
+				width: 100%;
 			}
 			button {
 				width: 100%;
-				padding: 15px;
 			}
 		}
 	</style>
 </head>
 <body>
+	<h1>Cábulas de Redes 2023/24</h1>
 	<div class="card">
-		<h1>Cábulas de Redes 2023/24</h1>
 		<div class="button-container">
 			<button onclick="window.location.href='./Router';">Router</button>
 			<button onclick="window.location.href='./switch';">Switch</button>
