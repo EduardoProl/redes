@@ -1,12 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Cabulas para a cadeira de Redes de Computadores - LEIC 2023/24</title>
+	<title>Redirect Buttons</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f0f0f0;
+		}
+		h1 {
+			color: #333;
+			text-align: center;
+		}
+		button {
+			background-color: #4CAF50;
+			color: #fff;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+		button:hover {
+			background-color: #3e8e41;
+		}
+		.button-container {
+			text-align: center;
+			margin: 20px;
+		}
+	</style>
 </head>
 <body>
-	<h1>Cabulas para a cadeira de Redes de Computadores - LEIC 2023/24</h1>
-	<button onclick="window.location.href='./Router';">Routers</button>
-	<button onclick="window.location.href='./switch';">Switch</button>
-	<button onclick="window.location.href='./Basic';">Comandos Basicos</button>
+	<h1>Redirect Buttons</h1>
+	<div class="button-container">
+		<button onclick="window.location.href='https://www.google.com';">Go to Google</button>
+		<button onclick="window.location.href='https://www.facebook.com';">Go to Facebook</button>
+		<button onclick="window.location.href='https://www.youtube.com';">Go to YouTube</button>
+	</div>
 </body>
 </html>
