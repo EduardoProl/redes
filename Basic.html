@@ -5,6 +5,111 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cabulas de redes - configuração basica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        header, .content {
+            margin: 20px;
+        }
+
+        header h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        hr {
+            border: 1px solid #ccc;
+        }
+
+        .markdown-heading h2,
+        .markdown-heading h3,
+        .markdown-heading h4 {
+            color: #444;
+        }
+
+        table {
+            width: auto;
+            max-width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            table-layout: auto;
+        }
+
+        table th,
+        table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul.toc {
+            margin: 0;
+        }
+
+        ul.toc > li {
+            margin: 0;
+        }
+
+        ul.toc li a {
+            text-decoration: none;
+            color: #0073e6;
+            display: inline-block;
+            width: 100%;
+            padding:0;
+        }
+
+        ul.toc li a:hover {
+            text-decoration: underline;
+        }
+
+        ul.toc ul {
+            list-style-type: disc;
+            margin-left: 15px;
+            padding-left: 10px;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+            overflow: auto;
+        }
+
+        .protip, .warning {
+            background-color: #ffffe0;
+            border-left: 6px solid #ffeb3b;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .protip::before, .warning::before {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .protip::before {
+            content: '💡 ProTip:';
+        }
+
+        .warning::before {
+            content: '⚠️ Warning:';
+        }
+    </style>
 </head>
 <body>
     <h1>Cabulas de redes - configuração basica</h1>
