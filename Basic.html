@@ -138,12 +138,16 @@
             <td style="border: 1px solid black;">ensure CDP is running <span style="font-size: 80%;">(although it is running on Cisco devices by default)</span></td>
         </tr>
         <tr>
-            <td style="border: 1px solid black;"><code>CDevice(config)#line console 0</code></td>
-            <td style="border: 1px solid black;"></td>
+            <td style="border: 1px solid black;"><code>CDevice(config)#line console 0
+            password PASSWORD
+            login</code></td>
+            <td style="border: 1px solid black;">Defines the password to normal access on login</td>
         </tr>
         <tr>
-            <td style="border: 1px solid black;"><code>CDevice(config-line)#logging synchronous</code></td>
-            <td style="border: 1px solid black;"></td>
+            <td style="border: 1px solid black;"><code>line vty 0 15
+            password PASSWORDVTY
+            login</code></td>
+            <td style="border: 1px solid black;">Adds a passord to VTY access on login</td>
         </tr>
         <tr>
             <td style="border: 1px solid black;"><code>CDevice(config-line)#history size [lines]</code></td>
@@ -166,21 +170,20 @@
 
 <p>You can copy the same sequence, contained in the text box below, and paste it in your Cisco device, whether it is a real-world physical Cisco device, or a simulated device in an environment like Packet Tracer.</p>
 
-<p> Note that the commands below are abbreviated. Still. They should work just fine.<br>
- Be sure to select and copy up to the blank line below the last command. That way, such last command will be executed without you having to manually press enter.</p>
-
 <pre>
-ena
-conf t
-no ip domain-lookup
-cdp run
-line con 0
-logging syn
-his size 50
-exec-timeout 25 0
-end
-copy run start
+Router(config)#hostname Bldg-1
+Bldg-1(config)#enable secret LMn789
+Bldg-1(config)#banner motd #Unauthorized access to this device is prohibited!#
 
+Bldg-1(config)#line console 0
+Bldg-1(config-line)#password CDe123
+Bldg-1(config-line)#login
+
+Bldg-1(config-line)#line vty 0 15
+Bldg-1(config-line)#password EFg456
+Bldg-1(config-line)#login
+
+Bldg-1(config-line)#service password-encryption
 << select and copy up to the line above this "marker" with your cursor
 </pre>
 
